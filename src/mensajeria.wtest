@@ -1,13 +1,71 @@
 import mensajeros.*
+import vehiculos.*
+import destinos.*
+
+test "roberto puede llevar paquete pago en camion con acoplado"{
+	roberto.peso(90)
+	roberto.asignarVehiculo(camion)
+	paquete.pagar()
+	paquete.estaPago()
+	paquete.asignarDestino(puenteDeBrooklyn)
+	assert.that(paquete.puedeSerEntregadoPor(roberto))
+}
+
+test "neo con credito no puede llevar paquete no pago a la matrix"{
+	neo.cargarCredito()
+	assert.that(not paquete.puedeSerEntregadoPor(neo))
+}
 
 test "La mensajeria tiene a neo como empleado si lo agregarmos" {
 	mensajeria.contratar(neo)
 	assert.that(mensajeria.mensajeros().contains(neo))
 }
 
-test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
+test "mensajeria contrata dos empleados"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(chuckNorris)
+	assert.equals([roberto, chuckNorris],mensajeria.mensajeros())
+}
+
+test "mensajeria despide a un roberto"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.despedir(roberto)
+	assert.equals([chuckNorris],mensajeria.mensajeros())
+}
+
+test "mensajeria despide a todos sus empleados"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.despedirATodos()	
+	assert.that(mensajeria.mensajeros().isEmpty())
+}
+
+test "ver si la empresa de mensajeria es grande"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(neo)
+	assert.that(mensajeria.esGrande())
+}
+
+test "roberto (el primer empledo) no puede entregar el paquete"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(neo)	
+	assert.that(not mensajeria.elPrimeroPuedeEntregar())
+}
+
+test "el peso del ultimo mensajero (neo) es 0"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.contratar(neo)	
+	assert.equals(0,mensajeria.pesoDelUltimo())
+}
+
+
+/*test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
 	mensajeria.contratar(neo)
 	paquete.pagar()
 	paquete.destino(matrix)
 	assert.that(mensajeria.mensajeros().contains(neo))
-}
+} */
